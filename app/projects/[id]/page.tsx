@@ -1,38 +1,22 @@
-'use client';
+import { Suspense } from 'react';
+import { Loader2 } from 'lucide-react';
+import ProjectPageContent from '@/components/ProjectPageContent';
 
-import { useParams, useRouter } from 'next/navigation';
-import ProjectDetail from '@/components/ProjectDetail';
-import AppHeader from '@/components/AppHeader';
+export const dynamic = 'force-dynamic';
+
+function ProjectLoading() {
+  return (
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center">
+      <Loader2 className="h-12 w-12 animate-spin text-muted-foreground mb-4" />
+      <p className="text-lg font-medium text-muted-foreground">Loading project...</p>
+    </div>
+  );
+}
 
 export default function ProjectPage() {
-  const params = useParams();
-  const router = useRouter();
-  const id = params?.id as string | undefined;
-
-  if (!id) {
-    return (
-      <div className="min-h-screen bg-background">
-        <AppHeader />
-        <main className="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
-          <p className="text-muted-foreground">Project not found.</p>
-        </main>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-      <main className="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
-        <ProjectDetail projectId={id} onClose={() => router.push('/')} />
-      </main>
-      <footer className="border-t mt-20">
-        <div className="max-w-5xl mx-auto px-4 md:px-6 py-6 text-center">
-          <p className="text-sm text-muted-foreground">
-            Powered by GPT-5-mini • Gemini • ElevenLabs • Whisper • xAI Grok • FFmpeg
-          </p>
-        </div>
-      </footer>
-    </div>
+    <Suspense fallback={<ProjectLoading />}>
+      <ProjectPageContent />
+    </Suspense>
   );
 }
